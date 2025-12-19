@@ -1,4 +1,4 @@
-package com.example.minimallauncher
+package com.rama.colibri
 
 import android.app.Activity
 import android.content.Intent
