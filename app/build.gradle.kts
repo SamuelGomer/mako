@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.rama.colibri"
+    namespace = "com.rama.mako"
     compileSdk = 36
 
     defaultConfig {

@@ -1,4 +1,4 @@
-package com.rama.colibri
+package com.rama.mako
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

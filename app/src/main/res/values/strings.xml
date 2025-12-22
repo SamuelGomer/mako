@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Colibri</string>
-    <string name="app_description">A lightweight, distraction-free Android launcher built for focus and simplicity. Privacy-first by design, fast, minimal, and entirely on-device.</string>
+    <string name="app_name">Mako</string>
+    <string name="app_description">A lightweight, distraction-free Android launcher that’s privacy-first and entirely on-device, designed for focus and simplicity.</string>
     <string name="icon_block_desc">No Background Tasks</string>
     <string name="icon_ads_desc">No Ads</string>
     <string name="icon_location_desc">No Trackers</string>

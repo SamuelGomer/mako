@@ -1,4 +1,4 @@
-package com.rama.colibri
+package com.rama.mako
 
 import android.app.Activity
 import android.os.Bundle
