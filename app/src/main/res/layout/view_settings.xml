@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_dark">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:padding="32dp">
+
+        <FrameLayout
+            android:id="@+id/activate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_secondary_rounded"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Set Launcher as Default"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/about_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_secondary_rounded"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="About Mako Launcher"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/wallpaper_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_secondary_rounded"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="Change OS Wallpaper"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light" />
+        </FrameLayout>
+
+        <!--        <LinearLayout-->
+        <!--            android:orientation="vertical"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="@drawable/bg_secondary_rounded"-->
+        <!--            android:gravity="center_vertical"-->
+        <!--            android:layout_marginBottom="8dp"-->
+        <!--            android:padding="16dp">-->
+
+        <!--            <TextView-->
+        <!--                android:text="Foreground"-->
+        <!--                android:textSize="16sp"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:layout_marginBottom="8dp"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:textColor="@color/text_light" />-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/foreground_color_input"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:inputType="text"-->
+        <!--                android:textColor="@color/text_light"-->
+        <!--                android:background="@color/input_color"-->
+        <!--                android:padding="12dp" />-->
+        <!--        </LinearLayout>-->
+
+        <!--        <LinearLayout-->
+        <!--            android:orientation="vertical"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="@drawable/bg_secondary_rounded"-->
+        <!--            android:gravity="center_vertical"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            android:padding="16dp">-->
+
+        <!--            <TextView-->
+        <!--                android:text="Background"-->
+        <!--                android:textSize="16sp"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:layout_marginBottom="8dp"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:textColor="@color/text_light" />-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/background_color_input"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:inputType="text"-->
+        <!--                android:textColor="@color/text_light"-->
+        <!--                android:background="@color/input_color"-->
+        <!--                android:padding="12dp" />-->
+        <!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/close_button"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_button_danger"
+            android:gravity="center">
+
+            <TextView
+                android:text="@string/close"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bg_dark" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

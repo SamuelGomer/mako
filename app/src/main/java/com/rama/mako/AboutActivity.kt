@@ -15,9 +15,9 @@ class AboutActivity : Activity() {
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-        setContentView(R.layout.about_view)
+        setContentView(R.layout.view_about)
 
         val root = findViewById<View>(android.R.id.content)
         root.setOnApplyWindowInsetsListener { v, insets ->
@@ -42,6 +42,11 @@ class AboutActivity : Activity() {
                 Uri.parse("https://github.com/jmiguelrivas")
             )
             startActivity(intent)
+        }
+
+        val closeButton = findViewById<View>(R.id.close_button)
+        closeButton.setOnClickListener {
+            finish()
         }
     }
 }

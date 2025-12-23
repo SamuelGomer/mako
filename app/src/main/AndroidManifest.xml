@@ -7,11 +7,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Colibri">
+        android:theme="@style/Theme.Mako">
 
         <activity
             android:name=".AboutActivity"
-            android:label="About"/>
+            android:label="About" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings" />
 
         <activity
             android:name=".MainActivity"
@@ -19,14 +23,15 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- Temporary default launcher for IDE -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

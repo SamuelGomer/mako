@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Colibri"
+rootProject.name = "Mako"
 include(":app")
  

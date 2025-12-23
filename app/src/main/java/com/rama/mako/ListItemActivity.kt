@@ -10,7 +10,7 @@ import android.widget.TextView
 
 import androidx.annotation.DrawableRes
 
-class ListItem @JvmOverloads constructor(
+class ListItemActivity @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

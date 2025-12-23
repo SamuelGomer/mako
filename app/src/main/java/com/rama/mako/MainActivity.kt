@@ -12,6 +12,7 @@ import android.widget.ListView
 import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.*
+import android.widget.Toast
 
 class MainActivity : Activity() {
 
@@ -34,7 +35,7 @@ class MainActivity : Activity() {
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.view_home)
 
         timeText = findViewById(R.id.time)
         dateText = findViewById(R.id.date)
@@ -43,6 +44,23 @@ class MainActivity : Activity() {
         setupAppList()
         startClock()
         registerBatteryReceiver()
+
+        val timeView = findViewById<View>(R.id.time)
+        timeText.setOnClickListener {
+            val clockIntent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory("android.intent.category.APP_CLOCK") // literal string
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+            // Check if an app exists to handle this intent
+            val pm = packageManager
+            val resolved = clockIntent.resolveActivity(pm)
+            if (resolved != null) {
+                startActivity(clockIntent)
+            } else {
+                Toast.makeText(this, "No clock app found", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -93,8 +111,12 @@ class MainActivity : Activity() {
             val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
 
+            val temp =
+                (((intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)) / 10f) * 9f / 5f) + 32f
+
             if (level >= 0 && scale > 0) {
-                batteryPercent = "${(level * 100 / scale.toFloat()).toInt()}%"
+                batteryPercent =
+                    "BAT: ${(level * 100 / scale.toFloat()).toInt()}% :: ${temp.toInt()}°F"
                 updateDateLine(
                     SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                         .format(Date())
@@ -112,17 +134,9 @@ class MainActivity : Activity() {
         }
 
         val apps = pm.queryIntentActivities(intent, 0)
-            .sortedBy { it.loadLabel(pm).toString().lowercase() }
+            .sortedBy { it.loadLabel(pm).toString().lowercase(Locale.getDefault()) }
 
         val labels = apps.map { it.loadLabel(pm).toString() }
-
-        val footer = layoutInflater.inflate(
-            R.layout.list_footer_about,
-            listView,
-            false
-        )
-
-        listView.addFooterView(footer)
 
         listView.adapter = ArrayAdapter(
             this,
@@ -136,17 +150,26 @@ class MainActivity : Activity() {
 
             val app = apps[position]
             val launchIntent = Intent().apply {
-                setClassName(
-                    app.activityInfo.packageName,
-                    app.activityInfo.name
-                )
+                setClassName(app.activityInfo.packageName, app.activityInfo.name)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            startActivity(launchIntent)
+
+            // Safely try to start the app
+            try {
+                startActivity(launchIntent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    this,
+                    "App not found or uninstalled",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
-        footer.setOnClickListener {
-            startActivity(Intent(this, AboutActivity::class.java))
+        val settingsButton = findViewById<View>(R.id.settings_button)
+
+        settingsButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 }
