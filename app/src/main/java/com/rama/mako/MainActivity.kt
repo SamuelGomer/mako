@@ -18,6 +18,11 @@ class MainActivity : Activity() {
     private lateinit var batteryHelper: BatteryManagerHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Load saved theme
+        val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
+        val themeRes = prefs.getInt("theme", R.style.Theme_Mako_Obsidian)
+        setTheme(themeRes)
+
         super.onCreate(savedInstanceState)
 
         // Fullscreen
@@ -27,7 +32,6 @@ class MainActivity : Activity() {
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
-        setTheme(R.style.Theme_Mako_Obsidian)
         setContentView(R.layout.view_home)
 
         // Find views
