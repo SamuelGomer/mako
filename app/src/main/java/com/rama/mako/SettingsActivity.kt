@@ -5,13 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.Toast
 
 class SettingsActivity : Activity() {
 
+    private val themes = mapOf(
+        "Obsidian" to R.style.Theme_Mako_Obsidian,
+        "Clay" to R.style.Theme_Mako_Clay,
+        "Emerald" to R.style.Theme_Mako_Emerald,
+        "Night" to R.style.Theme_Mako_Night
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Apply system UI flags
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
@@ -19,47 +29,101 @@ class SettingsActivity : Activity() {
 
         setContentView(R.layout.view_settings)
 
-        val root = findViewById<View>(android.R.id.content)
-        root.setOnApplyWindowInsetsListener { v, insets ->
-            val topInset = insets.systemWindowInsetTop
-            v.setPadding(v.paddingLeft, topInset, v.paddingRight, v.paddingBottom)
+        // Adjust for status bar
+        findViewById<View>(android.R.id.content).setOnApplyWindowInsetsListener { v, insets ->
+            v.setPadding(
+                v.paddingLeft,
+                insets.systemWindowInsetTop,
+                v.paddingRight,
+                v.paddingBottom
+            )
             insets
         }
 
-        val aboutBtn = findViewById<View>(R.id.about_button)
-        aboutBtn.setOnClickListener {
-            startActivity(Intent(this, AboutActivity::class.java))
+        // Setup buttons using helper method
+        setupButton(R.id.about_button) { startActivity(Intent(this, AboutActivity::class.java)) }
+        setupButton(R.id.close_button) { finish() }
+
+        setupButton(R.id.activate_button) {
+            openIntent(Intent(Settings.ACTION_HOME_SETTINGS), "Unable to open launcher settings")
+        }
+        setupButton(R.id.wallpaper_button) {
+            openIntent(
+                Intent(Intent.ACTION_SET_WALLPAPER),
+                "No wallpaper app available"
+            )
         }
 
-        val closeButton = findViewById<View>(R.id.close_button)
-        closeButton.setOnClickListener {
-            finish()
-        }
+        setupThemeBoxes()
+    }
 
-        val activateButton = findViewById<View>(R.id.activate_button)
+    // Helper to bind a click listener
+    private fun setupButton(id: Int, action: () -> Unit) {
+        findViewById<View>(id).setOnClickListener { action() }
+    }
 
-        activateButton.setOnClickListener {
-            val intent = Intent(Settings.ACTION_HOME_SETTINGS)
-
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(
-                    this,
-                    "Unable to open launcher settings",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-        val wallpaperButton = findViewById<View>(R.id.wallpaper_button)
-        wallpaperButton.setOnClickListener {
-            val wallpaperIntent = Intent(Intent.ACTION_SET_WALLPAPER)
-            if (wallpaperIntent.resolveActivity(packageManager) != null) {
-                startActivity(wallpaperIntent)
-            } else {
-                Toast.makeText(this, "No wallpaper app available", Toast.LENGTH_SHORT).show()
-            }
+    // Helper to start an intent safely
+    private fun openIntent(intent: Intent, errorMsg: String) {
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun setupThemeBoxes() {
+        val themesContainer = findViewById<LinearLayout>(R.id.themes_container)
+
+        val themeColors = mapOf(
+            R.style.Theme_Mako_Obsidian to R.color.bg_theme_obsidian,
+            R.style.Theme_Mako_Clay to R.color.bg_theme_clay,
+            R.style.Theme_Mako_Emerald to R.color.bg_theme_emerald,
+            R.style.Theme_Mako_Night to R.color.bg_theme_night
+        )
+
+        val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
+        val currentTheme = prefs.getInt("theme", R.style.Theme_Mako_Obsidian)
+
+        themesContainer.removeAllViews()
+
+        themeColors.forEach { (styleRes, colorRes) ->
+
+            // FrameLayout to hold fill + border
+            val frame = FrameLayout(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    resources.getDimensionPixelSize(R.dimen.theme_box_size),
+                    resources.getDimensionPixelSize(R.dimen.theme_box_size)
+                ).apply {
+                    setPadding(8, 8, 8, 8)
+                    marginEnd = resources.getDimensionPixelSize(R.dimen.theme_box_margin)
+                }
+
+                // Gray border
+                background = resources.getDrawable(R.drawable.bg_theme_box, theme)
+            }
+
+            // Inner colored View
+            val fill = View(this).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+                setBackgroundColor(resources.getColor(colorRes, theme))
+            }
+
+            frame.addView(fill)
+
+            if (styleRes == currentTheme) {
+                frame.background.setTint(0xFFDDDDDD.toInt())
+            }
+
+            frame.setOnClickListener {
+                prefs.edit().putInt("theme", styleRes).apply()
+                recreate()
+            }
+
+            themesContainer.addView(frame)
+        }
+    }
+
 }

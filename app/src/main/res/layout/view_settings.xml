@@ -70,61 +70,35 @@
                 android:textColor="@color/text_light" />
         </FrameLayout>
 
-        <!--        <LinearLayout-->
-        <!--            android:orientation="vertical"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@drawable/bg_secondary_rounded"-->
-        <!--            android:gravity="center_vertical"-->
-        <!--            android:layout_marginBottom="8dp"-->
-        <!--            android:padding="16dp">-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_secondary_rounded"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp">
 
-        <!--            <TextView-->
-        <!--                android:text="Foreground"-->
-        <!--                android:textSize="16sp"-->
-        <!--                android:textStyle="bold"-->
-        <!--                android:layout_marginBottom="8dp"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:textColor="@color/text_light" />-->
+            <TextView
+                android:text="Themes"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_light" />
 
-        <!--            <EditText-->
-        <!--                android:id="@+id/foreground_color_input"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:inputType="text"-->
-        <!--                android:textColor="@color/text_light"-->
-        <!--                android:background="@color/input_color"-->
-        <!--                android:padding="12dp" />-->
-        <!--        </LinearLayout>-->
+            <LinearLayout
+                android:id="@+id/themes_container"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:padding="16dp"
+                android:background="@drawable/bg_secondary_rounded"></LinearLayout>
 
-        <!--        <LinearLayout-->
-        <!--            android:orientation="vertical"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@drawable/bg_secondary_rounded"-->
-        <!--            android:gravity="center_vertical"-->
-        <!--            android:layout_marginBottom="16dp"-->
-        <!--            android:padding="16dp">-->
-
-        <!--            <TextView-->
-        <!--                android:text="Background"-->
-        <!--                android:textSize="16sp"-->
-        <!--                android:textStyle="bold"-->
-        <!--                android:layout_marginBottom="8dp"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:textColor="@color/text_light" />-->
-
-        <!--            <EditText-->
-        <!--                android:id="@+id/background_color_input"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:inputType="text"-->
-        <!--                android:textColor="@color/text_light"-->
-        <!--                android:background="@color/input_color"-->
-        <!--                android:padding="12dp" />-->
-        <!--        </LinearLayout>-->
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/close_button"

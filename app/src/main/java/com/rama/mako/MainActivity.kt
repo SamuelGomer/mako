@@ -67,6 +67,12 @@ class MainActivity : Activity() {
                 Toast.makeText(this, "No clock app found", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val settingsButton = findViewById<View>(R.id.settings_button)
+
+        settingsButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
     override fun onDestroy() {
