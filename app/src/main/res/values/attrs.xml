@@ -1,4 +1,7 @@
 <resources>
+    <attr name="bgTheme" format="color" />
+    <attr name="textTheme" format="color" />
+
     <declare-styleable name="ListItem">
         <attr name="text" format="string" />
         <attr name="icon" format="reference" />

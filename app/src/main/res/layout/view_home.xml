@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:textColor="@color/text_light"
+    android:textColor="@color/text_theme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="?attr/bgTheme"
     android:padding="32dp">
 
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/text_theme" />
 
             <ImageView
                 android:id="@+id/settings_button"
@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/date"
-            android:textColor="@color/text_light"
+            android:textColor="@color/text_theme"
             android:text="01 Jan 1999 | 0%"
             android:textSize="12sp"
             android:layout_width="wrap_content"
