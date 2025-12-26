@@ -10,24 +10,8 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <!-- Emerald -->
-    <style name="Theme.Mako.Emerald" parent="Theme.Mako">
-        <item name="bgTheme">@color/bg_theme_emerald</item>
-    </style>
-
     <!-- Obsidian -->
     <style name="Theme.Mako.Obsidian" parent="Theme.Mako">
         <item name="bgTheme">@color/bg_theme_obsidian</item>
     </style>
-
-    <!-- Night -->
-    <style name="Theme.Mako.Night" parent="Theme.Mako">
-        <item name="bgTheme">@color/bg_theme_night</item>
-    </style>
-
-    <!-- Clay -->
-    <style name="Theme.Mako.Clay" parent="Theme.Mako">
-        <item name="bgTheme">@color/bg_theme_clay</item>
-    </style>
-
 </resources>
