@@ -1,5 +1,6 @@
 <resources>
-    <style name="Theme.Mako" parent="Theme.Mako">
+
+    <style name="Theme.Mako.Obsidian." parent="Theme.Mako">
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 </resources>
