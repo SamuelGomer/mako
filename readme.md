@@ -11,7 +11,7 @@ distractions to a minimum by emphasizing clarity and intentional interaction.
 <p align="center">
 <a href="https://github.com/jmiguelrivas/mako/releases"><img alt="GitHub releases" src="https://img.shields.io/github/release/jmiguelrivas/mako.svg"></a>
 <a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
-<a href="https://github.com/jmiguelrivas/mako/actions"><img alt="Build Status" src="https://github.com/jmiguelrivas/mako/actions/workflows/android.yml/badge.svg?branch=main"></a>
+<a href="https://github.com/jmiguelrivas/mako/actions"><img alt="Build Status" src="https://github.com/jmiguelrivas/mako/actions/workflows/android.yml/badge.svg?branch=master"></a>
 </p>
 
 ---
