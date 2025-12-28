@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
@@ -55,7 +56,6 @@ class AppListHelper(
             ): View {
                 val view = super.getView(position, convertView, parent)
                 val app = getItem(position) ?: return view
-
                 val pkg = app.activityInfo.packageName
 
                 val label = view.findViewById<TextView>(R.id.open_app_button)
@@ -66,15 +66,23 @@ class AppListHelper(
 
                 label.text = app.loadLabel(pm)
 
-                // Long click
+                // Restore favorite state
+                favIcon.isSelected = prefs.getBoolean(pkg, false)
+
+                // Show/hide actions
+                actions.visibility =
+                    if (openActionsFor == pkg) View.VISIBLE else View.GONE
+
+                // Row tap
                 view.setOnClickListener {
-                    // If actions are open → close them
-                    if (openActionsFor == pkg) {
+                    if (openActionsFor != null) {
+                        // Hide any open actions first
                         openActionsFor = null
                         notifyDataSetChanged()
                         return@setOnClickListener
                     }
 
+                    // Launch app
                     val launchIntent = Intent().apply {
                         setClassName(pkg, app.activityInfo.name)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -90,12 +98,6 @@ class AppListHelper(
                         ).show()
                     }
                 }
-                // Restore favorite state
-                favIcon.isSelected = prefs.getBoolean(pkg, false)
-
-                // Show/hide actions
-                actions.visibility =
-                    if (openActionsFor == pkg) View.VISIBLE else View.GONE
 
                 // Long press → show actions
                 view.setOnLongClickListener {
@@ -129,31 +131,26 @@ class AppListHelper(
 
         listView.adapter = adapter
 
-//        listView.setOnItemClickListener { _, _, position, _ ->
-//            val app = apps.getOrNull(position) ?: return@setOnItemClickListener
-//            val pkg = app.activityInfo.packageName
-//
-//            // If actions are open, close them instead of launching
-//            if (openActionsFor == pkg) {
-//                openActionsFor = null
-//                adapter.notifyDataSetChanged()
-//                return@setOnItemClickListener
-//            }
-//
-//            val launchIntent = Intent().apply {
-//                setClassName(pkg, app.activityInfo.name)
-//                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            }
-//
-//            try {
-//                context.startActivity(launchIntent)
-//            } catch (e: Exception) {
-//                Toast.makeText(
-//                    context,
-//                    "App not found or uninstalled",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
+        // Auto-hide actions when scrolling
+        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
+            override fun onScrollStateChanged(
+                view: AbsListView?,
+                scrollState: Int
+            ) {
+                if (scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE &&
+                    openActionsFor != null
+                ) {
+                    openActionsFor = null
+                    adapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onScroll(
+                view: AbsListView?,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) = Unit
+        })
     }
 }
