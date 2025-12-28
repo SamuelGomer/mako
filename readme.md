@@ -1,6 +1,6 @@
-# Mako Launcher
+# Mako
 
-**Mako Launcher** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
+**Mako** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
 simplicity.
 
 Built entirely in **native Kotlin**, Mako runs fully **on-device**, avoids tracking, and keeps
@@ -57,8 +57,7 @@ health.
 
 ### From Releases
 
-Download the latest APK from the  
-👉 **[Releases page](https://github.com/jmiguelrivas/mako/releases)**
+Download the latest APK from the **[Releases page](https://github.com/jmiguelrivas/mako/releases)**
 
 ---
 
