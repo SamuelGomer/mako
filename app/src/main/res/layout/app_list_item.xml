@@ -3,45 +3,60 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="4dp"
     android:gravity="center_vertical">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/foreground_color"
-        android:padding="8dp"
-        android:layout_weight="1"
-        android:gravity="start|center_vertical"
-        android:textSize="16sp" />
-
-    <FrameLayout
-        android:id="@+id/favorite_button"
+    <!-- Always visible -->
+    <TextView
+        android:id="@+id/open_app_button"
+        android:textSize="16sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
-        android:padding="4dp">
+        android:gravity="start|center_vertical"
+        android:textColor="@color/foreground_color" />
 
-        <ImageView
-            android:id="@+id/favorite_icon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/star_toggle" />
-    </FrameLayout>
+    <!-- Hidden by default -->
+    <LinearLayout
+        android:id="@+id/actions_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:gravity="center_vertical">
 
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/close_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:padding="4dp">-->
+        <FrameLayout
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp">
 
-    <!--        <ImageView-->
-    <!--            android:layout_width="22dp"-->
-    <!--            android:layout_height="22dp"-->
-    <!--            android:src="@drawable/close" />-->
-    <!--    </FrameLayout>-->
+            <ImageView
+                android:id="@+id/favorite_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/star_toggle" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/close" />
+        </FrameLayout>
+    </LinearLayout>
+
 </LinearLayout>
