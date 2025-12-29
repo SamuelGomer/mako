@@ -94,10 +94,22 @@ class AppListHelper(
                     } catch (e: Exception) {
                         Toast.makeText(
                             context,
-                            "App not found or uninstalled",
+                            "App not found",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        // Remove from favorites
+                        prefs.edit().remove(pkg).apply()
+
+                        // Remove from list
+                        apps.remove(app)
+
+                        // Close any open actions
+                        openActionsFor = null
+
+                        notifyDataSetChanged()
                     }
+
                 }
 
                 // Check if this is the last favorite app in the list
