@@ -11,10 +11,15 @@ android {
         applicationId = "com.rama.mako"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "20251229_5"
+        versionCode = 10
+        versionName = "20251230"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     buildTypes {
