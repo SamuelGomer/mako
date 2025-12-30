@@ -18,8 +18,8 @@ distractions to a minimum by emphasizing clarity and intentional interaction.
 
 ## • Screenshots
 
-| Home                                                                                                                                         | Settings                                                                                                                                         | About                                                                                                                                         |
-|----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Home | Settings | About |
+| - | - | - |
 | ![Home](https://raw.githubusercontent.com/jmiguelrivas/mako/refs/heads/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Settings](https://raw.githubusercontent.com/jmiguelrivas/mako/refs/heads/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![About](https://raw.githubusercontent.com/jmiguelrivas/mako/refs/heads/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |
 
 ---
