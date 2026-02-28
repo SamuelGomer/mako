@@ -43,6 +43,11 @@
     <string name="icon_location_desc">Sin rastreadores</string>
     <string name="icon_offline_desc">Funciona sin conexión</string>
     <string name="icon_license_desc">Licencia GPLv3</string>
+    <string name="app_header">Aplicación</string>
+    <string name="icons_header">Iconos</string>
+    <string name="fonts_header">Fuentes</string>
+    <string name="jersey_license_desc">Licencia SIL Open Font (OFL) 1.1</string>
+    <string name="hackernoon_license_desc">Licencia CC BY 4.0</string>
 
     <!-- Settings -->
     <string name="settings">Configuración</string>

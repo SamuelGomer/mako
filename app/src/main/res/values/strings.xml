@@ -46,6 +46,18 @@
     <string name="icon_offline_desc">Works Offline</string>
     <string name="icon_license_desc">License GPLv3</string>
     <string name="mako_url" translatable="false">github.com/jmiguelrivas/mako</string>
+    <string name="app_header">App</string>
+    <string name="icons_header">Icons</string>
+    <string name="fonts_header">Fonts</string>
+    <string name="jersey_license_desc">SIL Open Font License (OFL) 1.1</string>
+    <string name="jersey_url" translatable="false">github.com/scfried/soft-type-jersey</string>
+    <string name="hackernoon_license_desc">License CC BY 4.0</string>
+    <string name="hackernoon_url" translatable="false">github.com/hackernoon/pixel-icon-library</string>
+    <string name="app_creator" translatable="false">Miguel Rivas</string>
+    <string name="hackernoon_creator" translatable="false">HackerNoon</string>
+    <string name="jersey_creator" translatable="false">Sarah Cadigan-Fried</string>
+    <string name="hackernoon_product" translatable="false">Pixel Icon Library</string>
+    <string name="jersey_product" translatable="false">Jersey 25 Regular</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

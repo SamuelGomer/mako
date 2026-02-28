@@ -43,6 +43,11 @@
     <string name="icon_location_desc">Jatorri ikerketarik gabe</string>
     <string name="icon_offline_desc">Offline funtzionatzen du</string>
     <string name="icon_license_desc">GPLv3 lizentzia</string>
+    <string name="app_header">Aplikazioa</string>
+    <string name="icons_header">Ikonoak</string>
+    <string name="fonts_header">Tipografiak</string>
+    <string name="jersey_license_desc">SIL Open Font License (OFL) 1.1</string>
+    <string name="hackernoon_license_desc">Lizentzia CC BY 4.0</string>
 
     <!-- Settings -->
     <string name="settings">Ezarpenak</string>

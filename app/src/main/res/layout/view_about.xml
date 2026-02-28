@@ -41,6 +41,33 @@
             android:gravity="start"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8sp"
+                android:textSize="18sp"
+                android:textColor="@color/foreground_color"
+                android:text="@string/app_header"
+                android:textStyle="bold" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_user"
+                app:text="@string/app_creator" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_seedlings"
+                app:text="@string/app_name" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_github"
+                app:text="@string/mako_url" />
+
             <com.rama.mako.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,11 +98,72 @@
                 app:icon="@drawable/icon_octagon_check_solid"
                 app:text="@string/icon_license_desc" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8sp"
+                android:textSize="18sp"
+                android:textColor="@color/foreground_color"
+                android:text="@string/fonts_header"
+                android:textStyle="bold" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_user"
+                app:text="@string/jersey_creator" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_seedlings"
+                app:text="@string/jersey_product" />
+
             <com.rama.mako.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/icon_github"
-                app:text="@string/mako_url" />
+                app:text="@string/jersey_url" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_octagon_check_solid"
+                app:text="@string/jersey_license_desc" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8sp"
+                android:textSize="18sp"
+                android:textColor="@color/foreground_color"
+                android:text="@string/icons_header"
+                android:textStyle="bold" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_user"
+                app:text="@string/hackernoon_creator" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_seedlings"
+                app:text="@string/hackernoon_product" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_github"
+                app:text="@string/hackernoon_url" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/icon_octagon_check_solid"
+                app:text="@string/hackernoon_license_desc" />
+
         </LinearLayout>
 
         <View
