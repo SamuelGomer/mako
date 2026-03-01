@@ -2,23 +2,16 @@
 
 # Mako
 
-[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/app/com.rama.mako)
-
 **Mako** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
 simplicity.
 
 Built entirely in **native Kotlin**, Mako runs fully **on-device**, avoids tracking, and keeps
 distractions to a minimum by emphasizing clarity and intentional interaction.
 
-<p align="center">
-<a href="https://github.com/jmiguelrivas/mako/releases"><img alt="GitHub releases" src="https://img.shields.io/github/release/jmiguelrivas/mako.svg"></a>
-<a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPLv3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
-<a href="https://github.com/jmiguelrivas/mako/actions"><img alt="Build Status" src="https://github.com/jmiguelrivas/mako/actions/workflows/android.yml/badge.svg?branch=master"></a>
-</p>
 
 ---
 
-## • Screenshots
+## Screenshots
 
 | Home | Settings | About |
 | - | - | - |
@@ -26,7 +19,7 @@ distractions to a minimum by emphasizing clarity and intentional interaction.
 
 ---
 
-## • Permissions
+## Permissions
 
 Mako Launcher requires **only essential permissions**:
 
@@ -37,44 +30,28 @@ No network access is required.
 
 ---
 
-## • Features
+## Features
 
-- **Favorites & sorting**: Long press an app to quickly access actions and mark it as favorite.
-  Favorite apps appear at the top of the list.
-- **Battery monitoring**: Monitor battery status and performance:
-    - **Temperature**: Device temperature labeled as `Warm`, `Hot`, or `Critical` when running
-      higher than normal.
-    - **Charging & discharging speed**: Displayed as relative multipliers (`1x`, `2x`, `3x`):
-        - Higher numbers indicate faster charging.
-        - Lower numbers indicate slower discharging (better battery efficiency).  
-          These indicators help you make informed choices to protect your battery and maintain
-          device performance.
-- **Day of the year**: Track the current day of the year at a glance for productivity or personal
-  tracking.
-
-Mako encourages **mindful device usage**, helping you reduce distractions and monitor your hardware
-health.
+- **App grouping & quick actions**: Long press any app to assign it to a group, rename it, or access additional actions. Grouped apps help you stay organized and find what you need faster.
+- **Battery monitoring**: Monitor battery status, temperature and performance.
+- **Day of the year**: Track the current day of the year at a glance for productivity or personal tracking.
 
 ---
 
-## • Installation
+## Installation
 
-### From Releases
+* Available on **[F-Droid](https://f-droid.org/app/com.rama.mako)** for easy installation and updates.
+* Download the latest APK from the **[Releases page](https://github.com/jmiguelrivas/mako/releases)** or use **[Obtanium](https://github.com/ImranR98/Obtainium)** to get the newest version directly from the github releases.
 
-Download the latest APK from the **[Releases page](https://github.com/jmiguelrivas/mako/releases)**
 
----
 
-## • License
+## License
 
-[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-
-**Mako Launcher** is Free Software. You are free to use, study, share, and improve it under the
-terms of the **GNU General Public License v3** or later.
+**Mako** is Free Software. You are free to use, study, share, and improve it under the terms of the **GNU General Public License v3** or later.
 
 ---
 
-## • Acknowledgements
+## Acknowledgements
 
 Inspired by [YAML Launcher](https://f-droid.org/en/packages/eu.ottop.yamlauncher/) and other
 privacy-focused Android tooling.
