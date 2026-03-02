@@ -40,6 +40,13 @@ No network access is required.
 
 ---
 
+## Usage
+
+* Long-press in an empty area of the **app list** to open **Settings**.
+* Watch the **[Mako Demo / Walkthrough](https://www.youtube.com/watch?v=cfble2DRqyM)** for a quick overview.
+
+---
+
 ## Installation
 
 * Available on **[F-Droid](https://f-droid.org/app/com.rama.mako)** for easy installation and
