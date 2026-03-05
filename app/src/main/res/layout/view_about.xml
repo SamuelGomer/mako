@@ -122,6 +122,12 @@
             <com.rama.mako.widgets.WdLabel
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:icon="@drawable/icon_github"
+                android:text="@string/hackernoon_url" />
+
+            <com.rama.mako.widgets.WdLabel
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:icon="@drawable/icon_octagon_check_solid"
                 android:text="@string/cc_4_desc" />
 
