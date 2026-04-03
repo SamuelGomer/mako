@@ -33,6 +33,7 @@ class MainActivity : CsActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
 
         val root = findViewById<View>(R.id.root)
@@ -139,7 +140,8 @@ class MainActivity : CsActivity() {
 
     // --- Settings sync (row visibility only) ---
     private fun syncSettings() {
-        timeText.visibility = if (prefs.isClockVisible()) View.VISIBLE else View.GONE
+        timeText.visibility =
+            if (prefs.getClockFormat() != PrefsManager.ClockFormat.NONE) View.VISIBLE else View.GONE
         findViewById<View>(R.id.date_row).visibility =
             if (prefs.isDateVisible()) View.VISIBLE else View.GONE
         findViewById<View>(R.id.battery_row).visibility =
@@ -150,7 +152,7 @@ class MainActivity : CsActivity() {
 
     // --- Open system clock safely ---
     private fun openSystemClock() {
-        val packageName = prefs.getString("clock_app_package", "")
+        val packageName = prefs.getClockApp()
 
         if (!packageName.isNullOrEmpty()) {
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)

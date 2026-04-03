@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.generateViewId
 import android.view.ViewGroup
 import android.widget.*
 import com.rama.mako.R
@@ -30,7 +31,6 @@ class AppListManager(
     private val items = mutableListOf<ListItem>()
     private lateinit var adapter: ArrayAdapter<ListItem>
     private val iconCache = mutableMapOf<String, Drawable>()
-    private val ungroupedLabel by lazy { context.getString(R.string.ungrouped_header) }
 
     fun setup() {
         buildItems()
@@ -44,40 +44,46 @@ class AppListManager(
     }
 
     private fun buildItems() {
-        val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
-        val allApps = pm.queryIntentActivities(intent, 0)
-        val ungroupedLabel = context.getString(R.string.ungrouped_header)
-
-        val existingGroups = groupsManager.getGroups().toMutableList().apply {
-            if (!contains(ungroupedLabel)) add(ungroupedLabel)
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
         }
 
-        // Map apps to their group (keep unknown groups as they are)
+        val allApps = pm.queryIntentActivities(intent, 0)
+
+        // Get all known group IDs
+        val groupIds = prefs.getGroupIds().toMutableSet()
+
+        // Map apps by groupId (NOT label)
         val groupedMap = allApps.groupBy { app ->
-            groupsManager.getGroup(app.activityInfo.packageName) ?: ungroupedLabel
+            prefs.getAppGroupId(app.activityInfo.packageName) ?: PrefsManager.SystemIds.UNGROUPED
         }
 
         items.clear()
 
-        val unknownGroups =
-            groupedMap.keys.filter { it != ungroupedLabel && !existingGroups.contains(it) }
-        val allGroupNames = (existingGroups + unknownGroups + ungroupedLabel).distinct()
+        // Include unknown groupIds (apps pointing to deleted groups)
+        val unknownGroupIds = groupedMap.keys.filter { it !in groupIds }
+        val allGroupIds = (groupIds + unknownGroupIds).distinct()
 
-        allGroupNames.forEach { groupName ->
-            val apps = groupedMap[groupName] ?: return@forEach
+        allGroupIds.forEach { groupId ->
 
-            val isVisible = groupsManager.isGroupVisible(groupName)
+            val apps = groupedMap[groupId] ?: return@forEach
 
-            // completely skip hidden groups
+            val isVisible = groupsManager.isGroupVisible(groupId)
             if (!isVisible) return@forEach
 
-            // header only if group is visible
-            if (prefs.isGroupHeaderVisible()) {
-                items.add(ListItem.Header(groupName))
+            val label = prefs.getGroupLabel(groupId)
+
+            // Header uses label only for display
+            if (prefs.hasGroupHeaders()) {
+                items.add(
+                    ListItem.Header(
+                        id = groupId,
+                        title = label
+                    )
+                )
             }
 
-            val isExpanded = groupsManager.isGroupExpanded(groupName)
-
+            val isExpanded = groupsManager.isGroupExpanded(groupId)
             if (!isExpanded) return@forEach
 
             apps.sortedBy { getDisplayName(it).lowercase() }
@@ -99,34 +105,58 @@ class AppListManager(
     fun filter(query: String) {
         val lowerQuery = query.lowercase()
 
-        // Rebuild items but only keep apps that match
         val filteredItems = mutableListOf<ListItem>()
 
-        val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
-        val allApps = pm.queryIntentActivities(intent, 0)
-        val ungroupedLabel = context.getString(R.string.ungrouped_header)
-        val existingGroups = groupsManager.getGroups().toMutableList()
-
-        val groupedMap = allApps.groupBy { app ->
-            groupsManager.getGroup(app.activityInfo.packageName) ?: ungroupedLabel
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
         }
 
-        val unknownGroups =
-            groupedMap.keys.filter { it != ungroupedLabel && !existingGroups.contains(it) }
-        val allGroupNames = (existingGroups + unknownGroups + ungroupedLabel).distinct()
+        val allApps = pm.queryIntentActivities(intent, 0)
 
-        allGroupNames.forEach { groupName ->
-            val apps = groupedMap[groupName] ?: return@forEach
-            if (existingGroups.contains(groupName) && !groupsManager.isGroupVisible(groupName)) return@forEach
+        // All known group IDs
+        val groupIds = prefs.getGroupIds().toMutableSet()
 
-            // Filter apps by query
-            val matchedApps = apps.filter { getDisplayName(it).lowercase().contains(lowerQuery) }
+        // Group by ID
+        val groupedMap = allApps.groupBy { app ->
+            prefs.getAppGroupId(app.activityInfo.packageName) ?: PrefsManager.SystemIds.UNGROUPED
+        }
 
-            if (matchedApps.isNotEmpty()) {
-                filteredItems.add(ListItem.Header(groupName))
-                matchedApps.sortedBy { getDisplayName(it).lowercase() }
-                    .forEach { filteredItems.add(ListItem.App(it)) }
+        // Handle unknown groups (apps pointing to deleted groups)
+        val unknownGroupIds = groupedMap.keys.filter { it !in groupIds }
+        val allGroupIds = (groupIds + unknownGroupIds).distinct()
+
+        allGroupIds.forEach { groupId ->
+
+            val apps = groupedMap[groupId] ?: return@forEach
+
+            val isVisible = groupsManager.isGroupVisible(groupId)
+            if (!isVisible) return@forEach
+
+            // Filter apps
+            val matchedApps = apps.filter {
+                getDisplayName(it).lowercase().contains(lowerQuery)
             }
+
+            if (matchedApps.isEmpty()) return@forEach
+
+            val label = prefs.getGroupLabel(groupId)
+
+            if (prefs.hasGroupHeaders()) {
+                filteredItems.add(
+                    ListItem.Header(
+                        id = groupId,
+                        title = label
+                    )
+                )
+
+            }
+
+            val isExpanded = groupsManager.isGroupExpanded(groupId)
+            if (!isExpanded) return@forEach
+
+            matchedApps
+                .sortedBy { getDisplayName(it).lowercase() }
+                .forEach { filteredItems.add(ListItem.App(it)) }
         }
 
         items.clear()
@@ -193,29 +223,36 @@ class AppListManager(
 
     private fun showGroupsDialog(app: ResolveInfo) {
         val pkg = app.activityInfo.packageName
+
         val view = View.inflate(context, R.layout.dialog_groups_add, null)
         FontManager.applyFont(context, view)
-        val dialog = AlertDialog.Builder(context).setView(view).setCancelable(true).create()
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(view)
+            .setCancelable(true)
+            .create()
 
         val closeBtn = view.findViewById<View>(R.id.close_button)
         val container = view.findViewById<RadioGroup>(R.id.groups)
 
         fun renderGroups() {
             container.removeAllViews()
+
             val radioGroup = RadioGroup(context)
-            val currentGroup = groupsManager.getGroup(pkg)
 
-            val groups = mutableListOf<String>().apply {
-                add(ungroupedLabel)
-                addAll(groupsManager.getGroups())
-            }
+            val currentGroupId = prefs.getAppGroupId(pkg) ?: PrefsManager.SystemIds.UNGROUPED
 
-            groups.forEachIndexed { index, group ->
-                val isLast = index == groups.lastIndex
+            // All group IDs (include ungrouped)
+            val groupIds = prefs.getGroupIds().toMutableList()
 
-                val row = LinearLayout(context).apply {
-                    orientation = LinearLayout.HORIZONTAL
+            groupIds.forEachIndexed { index, groupId ->
+                val isLast = index == groupIds.lastIndex
+                val label = prefs.getGroupLabel(groupId)
 
+                val radio = RadioButton(context).apply {
+                    id = generateViewId()
+                    text = label
+                    isChecked = groupId == currentGroupId
                     layoutParams = RadioGroup.LayoutParams(
                         RadioGroup.LayoutParams.MATCH_PARENT,
                         RadioGroup.LayoutParams.WRAP_CONTENT
@@ -224,28 +261,24 @@ class AppListManager(
                     }
                 }
 
-                val radio = RadioButton(context).apply {
-                    text = group
-                    isChecked = group == currentGroup
-                }
-
                 FontManager.applyFont(context, radio)
 
                 radio.setOnClickListener {
-                    groupsManager.setGroup(pkg, group)
+                    prefs.setAppGroupId(pkg, groupId)
                     refresh()
                     dialog.dismiss()
                 }
 
-                row.addView(radio)
-                radioGroup.addView(row)
+                radioGroup.addView(radio)
             }
 
             container.addView(radioGroup)
         }
 
         renderGroups()
+
         closeBtn.setOnClickListener { dialog.dismiss() }
+
         dialog.show()
     }
 
@@ -294,33 +327,27 @@ class AppListManager(
                             convertView ?: View.inflate(context, R.layout.app_list_header, null)
 
                         val text = view.findViewById<TextView>(R.id.header_text)
+
+                        val groupId = item.id
                         val groupName = item.title
 
-                        text.text = groupName.uppercase()
+                        val isExpanded = groupsManager.isGroupExpanded(groupId)
+
+                        text.text =
+                            (if (isExpanded) "[-] " else "[+] ") + groupName.uppercase()
+
                         FontManager.applyFont(context, text)
 
                         if (prefs.hasCollapsibleGroups()) {
-                            val isVisible =
-                                groupsManager.isGroupExpanded(groupName)
-
-                            text.text =
-                                (if (isVisible) "[-] " else "[+] ") + groupName.uppercase()
-                            text.setPadding(
-                                0,
-                                context.sp(16f),
-                                0,
-                                context.sp(16f)
-                            )
 
                             view.setOnClickListener {
-                                val currentlyVisible = groupsManager.isGroupExpanded(groupName)
-                                groupsManager.setGroupExpanded(groupName, !currentlyVisible)
+                                val currently = groupsManager.isGroupExpanded(groupId)
+                                groupsManager.setGroupExpanded(groupId, !currently)
                                 refresh()
                             }
                         }
 
                         view
-
                     }
 
                     is ListItem.App -> {
@@ -382,7 +409,12 @@ class AppListManager(
     }
 
     private sealed class ListItem {
-        data class Header(val title: String) : ListItem()
+
+        data class Header(
+            val id: String,
+            val title: String
+        ) : ListItem()
+
         data class App(val info: ResolveInfo) : ListItem()
     }
 }

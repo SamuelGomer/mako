@@ -1,115 +1,83 @@
 package com.rama.mako.managers
 
 import android.content.Context
-import com.rama.mako.R
+import com.rama.mako.utils.IdUtils
 
 class GroupsManager(private val context: Context) {
 
     private val prefs = PrefsManager.getInstance(context)
-    private val defaultGroup = context.getString(R.string.favorites_header)
-    private val ungroupedLabel = context.getString(R.string.ungrouped_header)
 
-    // --- Groups List ---
+    // ------------------- Groups -------------------
 
-    fun getGroups(): MutableList<String> {
-        return prefs.getStringSet("groups", mutableSetOf(defaultGroup))
-            .toMutableList()
-            .sortedBy { it.lowercase() }
-            .toMutableList()
+    fun getGroupIds(): List<String> =
+        prefs.getGroupIds()
+            .sortedBy { prefs.getGroupLabel(it).lowercase() }
+
+
+    fun createGroup(baseLabel: String): String {
+        val id = IdUtils.toBase36Fixed(System.currentTimeMillis())
+
+        val label = generateUniqueLabel(baseLabel)
+
+        prefs.addGroupId(id)
+        prefs.setGroupLabel(id, label)
+        prefs.setGroupVisible(id, true)
+        prefs.setGroupExpanded(id, true)
+
+        return id
     }
 
-    fun saveGroups(groups: List<String>) {
-        prefs.setStringSet("groups", groups.toSet())
-    }
-
-    // --- App -> Group Mapping ---
-
-    fun getGroup(pkg: String): String? {
-        return prefs.getStringSet("app_group_map_$pkg", mutableSetOf())?.firstOrNull()
-    }
-
-    fun setGroup(pkg: String, group: String?) {
-        if (group != null) {
-            prefs.setStringSet("app_group_map_$pkg", setOf(group))
-        } else {
-            prefs.setStringSet("app_group_map_$pkg", emptySet())
-        }
-    }
-
-    fun renameGroup(oldName: String, newName: String) {
-        val normalizedOld = oldName.trim()
-        val normalizedNew = newName.trim()
-
-        // --- Update all apps that belong to the old group ---
-        getAllAppGroups().forEach { (pkg, group) ->
-            if (group.trim().equals(normalizedOld, ignoreCase = true)) {
-                setGroup(pkg, normalizedNew)
+    fun deleteGroup(groupId: String, newGroupId: String?) {
+        getAllApps().forEach { pkg ->
+            if (prefs.getAppGroupId(pkg) == groupId) {
+                prefs.setAppGroupId(pkg, newGroupId)
             }
         }
 
-        // --- Update the groups list ---
-        val groups = getGroups().toMutableList()
-        val index = groups.indexOfFirst { it.trim().equals(normalizedOld, ignoreCase = true) }
-        if (index != -1) groups[index] = normalizedNew
-        else groups.add(normalizedNew) // If somehow the group didn't exist, add it
-
-        saveGroups(groups.sortedBy { it.lowercase() })
+        prefs.removeGroupId(groupId)
     }
 
-    fun deleteGroup(groupName: String, moveToGroup: String? = ungroupedLabel) {
-        val normalizedGroup = groupName.trim()
+    // ------------------- Label logic -------------------
 
-        // --- Remove group from the list ---
-        val groups = getGroups().toMutableList()
-        groups.removeAll { it.trim().equals(normalizedGroup, ignoreCase = true) }
-        saveGroups(groups)
+    private fun generateUniqueLabel(base: String): String {
+        val existing = prefs.getGroupIds()
+            .map { prefs.getGroupLabel(it).trim().lowercase() }
 
-        // --- Move apps to selected group (or ungrouped) ---
-        getAllAppGroups().forEach { (pkg, group) ->
-            if (group.trim().equals(normalizedGroup, ignoreCase = true)) {
-                setGroup(pkg, moveToGroup)
-            }
+        var label = base
+        var counter = 1
+
+        while (existing.contains(label.trim().lowercase())) {
+            counter++
+            label = "$base $counter"
         }
+
+        return label
     }
 
-    // --- Group Visibility ---
+    // ------------------- Visibility -------------------
 
-    fun isGroupVisible(group: String): Boolean {
-        return prefs.isGroupVisible(group)
-    }
+    fun isGroupVisible(groupId: String) =
+        prefs.isGroupVisible(groupId)
 
-    fun isGroupExpanded(group: String): Boolean {
-        return prefs.isGroupExpanded(group)
-    }
+    fun isGroupExpanded(groupId: String) =
+        prefs.isGroupExpanded(groupId)
 
-    fun setGroupVisibility(group: String, visible: Boolean) {
-        prefs.setGroupVisible(group, visible)
-    }
+    fun setGroupVisible(groupId: String, visible: Boolean) =
+        prefs.setGroupVisible(groupId, visible)
 
-    fun setGroupExpanded(group: String, visible: Boolean) {
-        prefs.setGroupExpanded(group, visible)
-    }
+    fun setGroupExpanded(groupId: String, expanded: Boolean) =
+        prefs.setGroupExpanded(groupId, expanded)
 
-    // --- Helper to get all stored app->group mappings ---
-    private fun getAllAppGroups(): Map<String, String> {
+    // ------------------- Helpers -------------------
+
+    private fun getAllApps(): List<String> {
         val pm = context.packageManager
 
         val intent = android.content.Intent(android.content.Intent.ACTION_MAIN).apply {
             addCategory(android.content.Intent.CATEGORY_LAUNCHER)
         }
 
-        val apps = pm.queryIntentActivities(intent, 0)
-
-        val map = mutableMapOf<String, String>()
-
-        apps.forEach { app ->
-            val pkg = app.activityInfo.packageName
-            val group = getGroup(pkg)
-            if (group != null) {
-                map[pkg] = group
-            }
-        }
-
-        return map
+        return pm.queryIntentActivities(intent, 0)
+            .map { it.activityInfo.packageName }
     }
 }
