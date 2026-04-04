@@ -3,29 +3,34 @@ package com.rama.mako.activities
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
 import android.view.View
 import android.view.View.generateViewId
 import android.view.ViewGroup
 import android.widget.*
 import com.rama.mako.CsActivity
 import com.rama.mako.R
+import com.rama.mako.managers.AppsProvider
 import com.rama.mako.managers.FontManager
 import com.rama.mako.managers.GroupsManager
 import com.rama.mako.managers.PrefsManager
 import com.rama.mako.managers.PrefsManager.PrefKeys
 import com.rama.mako.widgets.WdButton
 import com.rama.mako.widgets.WdCheckbox
+import android.text.TextWatcher
 
 class SettingsActivity : CsActivity() {
 
     private val prefs by lazy { PrefsManager.getInstance(this) }
-    private val groupsManager by lazy { GroupsManager(this) }
+    private val groupsManager by lazy { GroupsManager(this, AppsProvider(this)) }
+    private lateinit var appsProvider: AppsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_settings)
 
         applyEdgeToEdgePadding(findViewById(android.R.id.content))
+        appsProvider = AppsProvider(this)
 
         setupBasicButtons()
         setupClockFormat()
@@ -101,23 +106,6 @@ class SettingsActivity : CsActivity() {
         }
     }
 
-    data class AppInfo(val label: String, val packageName: String)
-
-    private fun getLaunchableApps(): List<AppInfo> {
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-
-        return packageManager.queryIntentActivities(intent, 0)
-            .map {
-                AppInfo(
-                    label = it.loadLabel(packageManager).toString(),
-                    packageName = it.activityInfo.packageName
-                )
-            }
-            .sortedBy { it.label.lowercase() }
-    }
-
     private fun showAppPickerDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_pick_clock_app, null)
         FontManager.applyFont(this, dialogView)
@@ -130,7 +118,7 @@ class SettingsActivity : CsActivity() {
         val listView = dialogView.findViewById<ListView>(R.id.app_list)
         val closeBtn = dialogView.findViewById<WdButton>(R.id.close_button)
 
-        val apps = getLaunchableApps()
+        val apps = appsProvider.getAll()
 
         val adapter = object : BaseAdapter() {
             override fun getCount() = apps.size
@@ -148,7 +136,7 @@ class SettingsActivity : CsActivity() {
 
                 view.findViewById<TextView>(R.id.open_app_button).text = app.label
                 view.findViewById<ImageView>(R.id.app_icon).setImageDrawable(
-                    packageManager.getApplicationIcon(app.packageName)
+                    appsProvider.getIcon(app)
                 )
 
                 FontManager.applyFont(parent.context, view)
@@ -286,7 +274,7 @@ class SettingsActivity : CsActivity() {
         fun render() {
             container.removeAllViews()
 
-            prefs.getGroupIds().forEach { id ->
+            groupsManager.getGroupIds().forEach { id ->
                 val label = prefs.getGroupLabel(id)
                 addGroupRow(id, label, container, mutableListOf())
             }
@@ -340,6 +328,24 @@ class SettingsActivity : CsActivity() {
         name.setText(groupLabel)
         name.tag = groupId
 
+        val originalText = name.text.toString()
+
+        name.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val currentText = s?.toString() ?: ""
+
+                saveButton.visibility =
+                    if (currentText != originalText && currentText.isNotBlank())
+                        View.VISIBLE
+                    else
+                        View.GONE
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         saveButton.setOnClickListener {
             val newLabel = name.text.toString().trim()
             if (newLabel.isNotEmpty()) {
@@ -347,6 +353,7 @@ class SettingsActivity : CsActivity() {
                 prefs.setGroupLabel(id, newLabel)
                 Toast.makeText(this, "Label Updated", Toast.LENGTH_SHORT).show()
             }
+            saveButton.visibility = View.GONE
         }
 
         // ------------------- Delete -------------------
@@ -365,7 +372,7 @@ class SettingsActivity : CsActivity() {
 
             val currentGroupId = name.tag as String
 
-            val targetGroups = prefs.getGroupIds()
+            val targetGroups = groupsManager.getGroupIds()
                 .filter { it != currentGroupId }
 
             var selectedGroupId: String? = null

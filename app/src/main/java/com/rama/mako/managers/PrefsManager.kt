@@ -3,6 +3,7 @@ package com.rama.mako.managers
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.UserHandle
 import android.util.Log
 import com.rama.mako.utils.IdUtils
 import org.json.JSONObject
@@ -49,7 +50,17 @@ class PrefsManager private constructor(context: Context) {
         const val CLOCK_APP = "clock:app"
         const val FONT_STYLE = "font:style"
 
-        fun APP_GROUP_ID(pkg: String) = "app:$pkg:group_id"
+        fun appKey(pkg: String, userHandle: UserHandle): String {
+            val userId = userHandle.hashCode()
+            return if (userId == 0) "app:$pkg" else "app:$pkg:profile_$userId"
+        }
+
+        fun APP_GROUP_ID(pkg: String, userHandle: UserHandle) =
+            "${appKey(pkg, userHandle)}:group_id"
+
+        fun APP_CUSTOM_LABEL(pkg: String, userHandle: UserHandle) =
+            "${appKey(pkg, userHandle)}:custom_label"
+
         fun GROUP_LABEL(id: String) = "group:$id:label"
         fun GROUP_VISIBLE(id: String) = "group:$id:visible"
         fun GROUP_EXPANDED(id: String) = "group:$id:expanded"
@@ -127,20 +138,19 @@ class PrefsManager private constructor(context: Context) {
 
     // --- APP GROUP MAPPING ---
 
-    //    fun getAppGroupId(pkg: String): String? =
-//        getString(PrefKeys.APP_GROUP_ID(pkg), "").takeIf { it.isNotEmpty() }
-    fun getAppGroupId(pkg: String): String {
-        return prefs.getString(PrefKeys.APP_GROUP_ID(pkg), null)
+    fun getAppGroupId(pkg: String, userHandle: UserHandle): String {
+        return prefs.getString(PrefKeys.APP_GROUP_ID(pkg, userHandle), null)
             ?: SystemIds.UNGROUPED.also {
-                prefs.edit().putString(PrefKeys.APP_GROUP_ID(pkg), it).apply()
+                prefs.edit().putString(PrefKeys.APP_GROUP_ID(pkg, userHandle), it).apply()
             }
     }
 
-    fun setAppGroupId(pkg: String, groupId: String?) {
+    fun setAppGroupId(pkg: String, userHandle: UserHandle, groupId: String?) {
+        val key = PrefKeys.APP_GROUP_ID(pkg, userHandle)
         if (groupId != null) {
-            setString(PrefKeys.APP_GROUP_ID(pkg), groupId)
+            prefs.edit().putString(key, groupId).apply()
         } else {
-            setString(PrefKeys.APP_GROUP_ID(pkg), "")
+            prefs.edit().remove(key).apply()
         }
     }
 
@@ -240,6 +250,16 @@ class PrefsManager private constructor(context: Context) {
 
     fun setString(key: String, value: String) =
         prefs.edit().putString(key, value).apply()
+
+    fun getCustomName(pkg: String, userHandle: UserHandle): String? =
+        prefs.getString(PrefKeys.APP_CUSTOM_LABEL(pkg, userHandle), null)
+            ?.takeIf { it.isNotEmpty() }
+
+    fun setCustomName(pkg: String, userHandle: UserHandle, name: String) =
+        prefs.edit().putString(PrefKeys.APP_CUSTOM_LABEL(pkg, userHandle), name).apply()
+
+    fun clearCustomName(pkg: String, userHandle: UserHandle) =
+        prefs.edit().remove(PrefKeys.APP_CUSTOM_LABEL(pkg, userHandle)).apply()
 
     // Core builder
 
